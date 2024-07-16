@@ -26,6 +26,13 @@ void main() {
 
   /* Other Variable Declarations Go Here */
   /* Statistics and Printing Functions Go Here */
+  printf("Data set (Unsorted) :");
+  print_array(test, SIZE);
+  printf("\n");
+  print_statistics(test, SIZE);
+  printf("\n");
+  printf("Data set (Sorted): ");
+  print_array(test, SIZE);
 
 }
 
@@ -42,7 +49,11 @@ void main() {
  * @return void
  */
 void print_statistics(unsigned char* array, unsigned int length) {
-
+    printf("Statistics:\n");
+    printf("Minimum: %d\n", find_minimum(array, length));
+    printf("Maximum: %d\n", find_maximum(array, length));
+    printf("Mean: %d\n", find_mean(array, length));
+    printf("Median: %d\n", find_median(array, length));
 }
 
 /**
@@ -57,7 +68,11 @@ void print_statistics(unsigned char* array, unsigned int length) {
  * @return void
  */
 void print_array(unsigned char* array, unsigned int length) {
-
+  printf("Array: ");
+  for (unsigned int i = 0; i < length; i++) {
+    printf("%d ", array[i]);
+    }
+    printf("\n");
 }
 
 /**
@@ -72,7 +87,12 @@ void print_array(unsigned char* array, unsigned int length) {
  * @return The median value of the array.
  */
 unsigned char find_median(unsigned char* array, unsigned int length) {
-
+  sort_array(array, length);
+  if (length % 2 == 0) {
+    return (array[length / 2] + array[length / 2 - 1])/2;
+  } else {
+    return array[length / 2];
+  }
 }
 
 /**
@@ -87,7 +107,11 @@ unsigned char find_median(unsigned char* array, unsigned int length) {
  * @return The mean value of the array.
  */
 unsigned char find_mean(unsigned char* array, unsigned int length) {
-
+  unsigned int sum = 0;
+  for (unsigned int i = 0; i < length; i++) {
+    sum += array[i];
+  }
+  return sum / length;
 }
 
 /**
@@ -102,7 +126,13 @@ unsigned char find_mean(unsigned char* array, unsigned int length) {
  * @return The maximum value of the array.
  */
 unsigned char find_maximum(unsigned char* array, unsigned int length) {
-
+  unsigned char max = array[0];
+  for (unsigned int i = 1; i < length; i++) {
+    if (array[i] > max) {
+      max = array[i];
+    }
+  }
+  return max;
 }
 
 /**
@@ -117,7 +147,13 @@ unsigned char find_maximum(unsigned char* array, unsigned int length) {
  * @return The minimum value of the array.
  */
 unsigned char find_minimum(unsigned char* array, unsigned int length) {
-
+  unsigned char min = array[0];
+  for (unsigned int i = 1; i < length; i++) {
+    if (array[i] < min) {
+      min = array[i];
+    }  
+  }
+  return min;
 }
 /**
  * @brief Sorts the array from largest to smallest.
@@ -131,7 +167,7 @@ unsigned char find_minimum(unsigned char* array, unsigned int length) {
  * @return void
  */
 void sort_array(unsigned char* array, unsigned int length) {
-
+    quicksort(array, 0, length - 1);
 }
 
 /**
@@ -147,7 +183,11 @@ void sort_array(unsigned char* array, unsigned int length) {
  * @return void
  */
 void quicksort(unsigned char* array, int low, int high) {
-
+    if (low < high) {
+        int pi = partition(array, low, high);
+        quicksort(array, low, pi - 1);
+        quicksort(array, pi + 1, high);
+    }
 }
 
 /**
@@ -163,5 +203,18 @@ void quicksort(unsigned char* array, int low, int high) {
  * @return The index of the pivot.
  */
 int partition(unsigned char* array, int low, int high) {
-
+    unsigned char pivot = array[high];
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (array[j] > pivot) {
+            i++;
+            unsigned char temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+    unsigned char temp = array[i + 1];
+    array[i + 1] = array[high];
+    array[high] = temp;
+    return (i + 1);
 }
