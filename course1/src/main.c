@@ -10,45 +10,35 @@
  *****************************************************************************/
 /**
  * @file main.c
- * @brief Main entry point to the C1M2 Assessment
+ * @brief Main entry point for the Course 1 application
  *
- * This file contains the main code for the C1M2 assesment. Students
- * are not to change any of the code, they are instead supposed to compile
- * these files with their makefile.
+ * This file contains the main function which conditionally calls the
+ * course1() function when the COURSE1 compile-time switch is enabled.
+ * This allows different course deliverables to be conditionally built
+ * and executed based on compilation flags.
  *
- * @author Alex Fosdick
- * @date April 1 2017
+ * To enable this, compile using the -DCOURSE1 flag.
+ *
+ * Example:
+ * gcc -DCOURSE1 -o main main.c course1.c
+ *
+ * @author 
+ * @date 
  *
  */
-#include "platform.h"
-#include "memory.h"
 
-#define MAX_LENGTH (10)
-char buffer[MAX_LENGTH];
+#include "course1.h"  // Ensure this header declares: void course1(void);
 
-/* A pretty boring main file */
-int main(void) {
-  unsigned int i;
-  char value;
-
-  /* Code below does some arbitrary memory Reads & writes */
-  clear_all(buffer, MAX_LENGTH);
-  set_all( ( buffer + 8 ), 43, 2); 
-  set_value(buffer, 0, 0x61);
-  value = get_value(buffer, 9);
-  set_value(buffer, 9, (value + 0x27));
-  set_value(buffer, 3, 0x37);
-  set_value(buffer, 1, 88);
-  set_value(buffer, 4, '2');
-  value = get_value(buffer, 1);
-  set_value(buffer, 2, 121);
-  set_value(buffer, 7, (value - 12));
-  set_value(buffer, 5, 0x5F);
-
-  for ( i = 0; i < MAX_LENGTH; i++ ){
-    PRINTF("%c", buffer[i]);
-  }
-  PRINTF("\n");
-  return 0;
+/**
+ * @brief Main function
+ *
+ * Entry point of the program. Calls course1() if the COURSE1 macro is defined.
+ *
+ * @return int Returns 0 after execution
+ */
+int main() {
+#ifdef COURSE1
+    course1();
+#endif
+    return 0;
 }
-

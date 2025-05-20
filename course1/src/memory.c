@@ -10,41 +10,98 @@
  *****************************************************************************/
 /**
  * @file memory.c
- * @brief Abstraction of memory read and write operations
+ * @brief Implementation of memory manipulation functions
  *
- * This implementation file provides an abstraction of reading and
- * writing to memory via function calls. There is also a globally
- * allocated buffer array used for manipulation.
+ * This file contains implementations of memory functions such as move,
+ * copy, set, zero, reverse, allocate, and free. All operations are done
+ * using pointer arithmetic without array indexing.
  *
- * @author Alex Fosdick
- * @date April 1 2017
+ * @author
+ * @date
  *
  */
-#include "memory.h"
+#include <stdlib.h>  // For malloc and free
+#include <stdint.h>
+#include <stddef.h>
+#include <stdio.h>
 
-/***********************************************************
- Function Definitions
-***********************************************************/
-void set_value(char * ptr, unsigned int index, char value){
-  ptr[index] = value;
+
+uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length) {
+    uint8_t * ret = dst;  // Save original dst pointer
+    if (src == dst || length == 0) return ret;
+
+    if (dst > src && dst < src + length) {
+        src += length - 1;
+        dst += length - 1;
+        while (length--) {
+            *dst-- = *src--;
+        }
+    } else {
+        while (length--) {
+            *dst++ = *src++;
+        }
+    }
+    return ret;
 }
 
-void clear_value(char * ptr, unsigned int index){
-  set_value(ptr, index, 0);
+uint8_t * my_memcopy(uint8_t * src, uint8_t * dst, size_t length) {
+    uint8_t * ret = dst;
+    while (length--) {
+        *dst++ = *src++;
+    }
+    return ret;
 }
 
-char get_value(char * ptr, unsigned int index){
-  return ptr[index];
+uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value) {
+    uint8_t *ptr = src;
+    while (length--) {
+        *ptr++ = value;
+    }
+    return src;
 }
 
-void set_all(char * ptr, char value, unsigned int size){
-  unsigned int i;
-  for(i = 0; i < size; i++) {
-    set_value(ptr, i, value);
-  }
+uint8_t * my_memzero(uint8_t * src, size_t length) {
+    uint8_t *ptr = src;
+    while (length--) {
+        *ptr++ = 0;
+    }
+    return src;
 }
 
-void clear_all(char * ptr, unsigned int size){
-  set_all(ptr, 0, size);
+uint8_t * my_reverse(uint8_t * src, size_t length) {
+    if (src == NULL || length == 0) return src;
+
+    // printf("Before reverse:\n");
+    // for (size_t i = 0; i < length; i++) {
+    //     printf("%d ", src[i]);
+    // }
+    // printf("\n");
+
+    uint8_t *start = src;
+    uint8_t *end = src + length - 1;
+
+    while (start < end) {
+        uint8_t temp = *start;
+        *start = *end;
+        *end = temp;
+        start++;
+        end--;
+    }
+
+    // printf("After reverse:\n");
+    // for (size_t i = 0; i < length; i++) {
+    //     printf("%d ", src[i]);
+    // }
+    // printf("\n");
+
+    return src;
 }
 
+uint32_t * reserve_words(size_t length) {
+    uint32_t * ptr = (uint32_t *) malloc(length * sizeof(uint32_t));
+    return ptr;  // returns NULL if malloc fails
+}
+
+void free_words(uint32_t * src) {
+    free(src);
+}

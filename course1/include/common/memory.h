@@ -10,84 +10,109 @@
  *****************************************************************************/
 /**
  * @file memory.h
- * @brief Abstraction of memory read and write operations
+ * @brief Abstraction of memory manipulation operations
  *
- * This header file provides an abstraction of reading and
- * writing to memory via function calls. 
+ * This header file provides function declarations for low-level memory 
+ * manipulation operations, including moving, copying, setting, zeroing, 
+ * reversing memory, and dynamic memory allocation.
+ * 
+ * All functions use pointer arithmetic and avoid array indexing.
  *
- * @author Alex Fosdick
- * @date April 1 2017
+ * @author
+ * @date
  *
  */
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
 
-/**
- * @brief Sets a value of a data array 
- *
- * Given a pointer to a char data set, this will set a provided
- * index into that data set to the value provided.
- *
- * @param ptr Pointer to data array
- * @param index Index into pointer array to set value
- * @param value value to write the the locaiton
- *
- * @return void.
- */
-void set_value(char * ptr, unsigned int index, char value);
+#include <stdint.h>
+#include <stddef.h>
 
 /**
- * @brief Clear a value of a data array 
+ * @brief Moves a block of memory handling overlaps
  *
- * Given a pointer to a char data set, this will clear a provided
- * index into that data set to the value zero.
+ * Moves `length` bytes from `src` to `dst`. Handles overlapping source 
+ * and destination ranges safely.
  *
- * @param ptr Pointer to data array
- * @param index Index into pointer array to set value
+ * @param src Pointer to the source memory
+ * @param dst Pointer to the destination memory
+ * @param length Number of bytes to move
  *
- * @return void.
+ * @return Pointer to the destination memory
  */
-void clear_value(char * ptr, unsigned int index);
+uint8_t * my_memmove(uint8_t * src, uint8_t * dst, size_t length);
 
 /**
- * @brief Returns a value of a data array 
+ * @brief Copies a block of memory without handling overlap
  *
- * Given a pointer to a char data set, this will read the provided
- * index into that data set and return the value.
+ * Copies `length` bytes from `src` to `dst`. Behavior is undefined if 
+ * source and destination regions overlap.
  *
- * @param ptr Pointer to data array
- * @param index Index into pointer array to set value
+ * @param src Pointer to the source memory
+ * @param dst Pointer to the destination memory
+ * @param length Number of bytes to copy
  *
- * @return Value to be read.
+ * @return Pointer to the destination memory
  */
-char get_value(char * ptr, unsigned int index);
+uint8_t * my_memcopy(uint8_t * src, uint8_t * dst, size_t length);
 
 /**
- * @brief Sets data array elements to a value
+ * @brief Sets memory to a specific value
  *
- * Given a pointer to a char data set, this will set a number of elements
- * from a provided data array to the given value. The length is determined
- * by the provided size parameter.
+ * Sets `length` bytes starting from `src` to the specified `value`.
  *
- * @param ptr Pointer to data array
- * @param value value to write the the locaiton
- * @param size Number of elements to set to value
+ * @param src Pointer to the memory block
+ * @param length Number of bytes to set
+ * @param value The value to write to each byte
  *
- * @return void.
+ * @return Pointer to the source memory
  */
-void set_all(char * ptr, char value, unsigned int size);
+uint8_t * my_memset(uint8_t * src, size_t length, uint8_t value);
 
 /**
- * @brief Clears elements in a data array
+ * @brief Sets memory to zero
  *
- * Given a pointer to a char data set, this will set a clear a number
- * of elements given the size provided. Clear means to set to zero. 
+ * Sets `length` bytes starting from `src` to zero.
  *
- * @param ptr Pointer to data array
- * @param size Number of elements to set to zero
+ * @param src Pointer to the memory block
+ * @param length Number of bytes to zero
  *
- * @return void.
+ * @return Pointer to the source memory
  */
-void clear_all(char * ptr, unsigned int size);
+uint8_t * my_memzero(uint8_t * src, size_t length);
+
+/**
+ * @brief Reverses the order of bytes in memory
+ *
+ * Reverses the order of `length` bytes starting at `src`.
+ *
+ * @param src Pointer to the memory block
+ * @param length Number of bytes to reverse
+ *
+ * @return Pointer to the source memory
+ */
+uint8_t * my_reverse(uint8_t * src, size_t length);
+
+/**
+ * @brief Allocates dynamic memory for word storage
+ *
+ * Allocates memory for `length` 32-bit integers (words) and returns a pointer.
+ *
+ * @param length Number of 32-bit words to allocate
+ *
+ * @return Pointer to allocated memory, or NULL if allocation fails
+ */
+uint32_t * reserve_words(size_t length);
+
+/**
+ * @brief Frees dynamically allocated word memory
+ *
+ * Frees the memory pointed to by `src`.
+ *
+ * @param src Pointer to memory to be freed
+ *
+ * @return void
+ */
+void free_words(uint32_t * src);
 
 #endif /* __MEMORY_H__ */

@@ -7,17 +7,15 @@
 # software. Alex Fosdick and the University of Colorado are not liable for any
 # misuse of this material. 
 #
-#*****************************************************************************
+#******************************************************************************
 
 # Check the PLATFORM variable and assign files and include paths accordingly.
 ifeq ($(PLATFORM),HOST)
-	SOURCES = main.c memory.c
-	INCLUDES = -I../include/common
+	SOURCES = src/main.c src/memory.c src/stats.c src/data.c src/course1.c
+  	INCLUDES = -Iinclude/common
 else ifeq ($(PLATFORM),MSP432)
-	SOURCES = main.c memory.c \
-		interrupts_msp432p401r_gcc.c \
-		startup_msp432p401r_gcc.c \
-		system_msp432p401r.c
-	INCLUDES = -I../include/common -I../include/msp432 -I../include/CMSIS
+	SOURCES := src/main.c src/memory.c src/stats.c src/data.c src/course1.c \
+           src/interrupts_msp432p401r_gcc.c src/startup_msp432p401r_gcc.c \
+           src/system_msp432p401r.c 
+  	INCLUDES = -Iinclude/common -Iinclude/msp432 -Iinclude/CMSIS
 endif
-
